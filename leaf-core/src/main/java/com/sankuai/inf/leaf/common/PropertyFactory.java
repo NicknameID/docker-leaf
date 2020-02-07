@@ -12,6 +12,14 @@ public class PropertyFactory {
     static {
         try {
             prop.load(PropertyFactory.class.getClassLoader().getResourceAsStream("leaf.properties"));
+            for (Object key : prop.keySet()) {
+                String propertyKey = key.toString();
+                String property = System.getenv(propertyKey);
+                if (property != null) {
+                    prop.setProperty(propertyKey, property);
+                    logger.info(String.format("Property overwrite by environment: %s=%s", propertyKey, property));
+                }
+            }
         } catch (IOException e) {
             logger.warn("Load Properties Ex", e);
         }
